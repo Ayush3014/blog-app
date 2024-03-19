@@ -1,3 +1,5 @@
+import { PrismaClient } from '@prisma/client/edge';
+import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from 'hono';
 import { verify } from 'hono/jwt';
 
@@ -12,8 +14,18 @@ export const blogRouter = new Hono<{
   };
 }>();
 
-blogRouter.get('/bulk', (c) => {
-  return c.text('All blogs');
+blogRouter.get('/bulk', async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const posts = await prisma.post.findMany({});
+    return c.json({ posts });
+  } catch (error) {
+    c.status(403);
+    return c.json({ error: 'Failed to fetch the blogs' });
+  }
 });
 
 // middleware verifying the token
@@ -36,21 +48,77 @@ blogRouter.use('/*', async (c, next) => {
   await next();
 });
 
-// add middleware here, user posts a blog
-blogRouter.post('/', (c) => {
-  console.log(c.get('userId'));
-  return c.text('Blog');
+// middleware here, user posts a blog
+blogRouter.post('/', async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const body = await c.req.json();
+  const userId = c.get('userId');
+
+  try {
+    const post = await prisma.post.create({
+      data: {
+        title: body.title,
+        content: body.content,
+        authorId: userId,
+      },
+    });
+
+    return c.json({ id: post.id });
+  } catch (error) {
+    c.status(403);
+    return c.json({ error: 'Failed to post the blog' });
+  }
 });
 
 // add middleware here, user updates a blog
-blogRouter.put('/', (c) => {
-  console.log(c.get('userId'));
-  return c.text('Update blog');
+blogRouter.put('/', async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  const userId = c.get('userId');
+  const body = await c.req.json();
+
+  try {
+    await prisma.post.update({
+      where: {
+        id: body.id,
+        authorId: userId,
+      },
+      data: {
+        title: body.title,
+        content: body.content,
+      },
+    });
+
+    return c.text('Post updated');
+  } catch (error) {
+    c.status(403);
+    return c.json({ error: 'Failed to update the blog' });
+  }
 });
 
 // add middleware here, user gets a blog with a specific id
-blogRouter.get('/:id', (c) => {
-  console.log(c.get('userId'));
+blogRouter.get('/:id', async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env.DATABASE_URL,
+  }).$extends(withAccelerate());
+
   const id = c.req.param('id');
-  return c.text('Blog with id: ' + id);
+
+  try {
+    const blog = await prisma.post.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    return c.json({ blog });
+  } catch (error) {
+    c.status(403);
+    return c.json({ error: 'Failed to get the blog' });
+  }
 });
