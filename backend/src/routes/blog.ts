@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import { Hono } from 'hono';
 import { verify } from 'hono/jwt';
+import { createPostInput, updatePostInput } from '@ayush3014/common-app';
 
 // passing database url type as a generic to access it in context (c)
 export const blogRouter = new Hono<{
@@ -56,6 +57,11 @@ blogRouter.post('/', async (c) => {
 
   const body = await c.req.json();
   const userId = c.get('userId');
+  const { success } = createPostInput.safeParse(body);
+  if (!success) {
+    c.status(400);
+    return c.json({ error: 'Invalid input' });
+  }
 
   try {
     const post = await prisma.post.create({
@@ -81,6 +87,11 @@ blogRouter.put('/', async (c) => {
 
   const userId = c.get('userId');
   const body = await c.req.json();
+  const { success } = updatePostInput.safeParse(body);
+  if (!success) {
+    c.status(400);
+    return c.json({ error: 'Invalid inputs!' });
+  }
 
   try {
     await prisma.post.update({
