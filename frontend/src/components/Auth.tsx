@@ -39,7 +39,7 @@ export function Auth({ type }: { type: 'signup' | 'signin' }) {
                 ? "Don't have an account? "
                 : 'Already have an account? '}
               <Link
-                className="pl-2 underline"
+                className="pl-1 underline"
                 to={type === 'signin' ? '/signup' : '/signin'}
               >
                 {type === 'signin' ? 'Sign Up' : 'Sign In'}
@@ -47,7 +47,7 @@ export function Auth({ type }: { type: 'signup' | 'signin' }) {
             </div>
           </div>
           <div className="pt-8">
-            {type === 'signup' ? null : (
+            {type === 'signup' ? (
               <LabelledInput
                 label="Name"
                 placeholder="John Doe"
@@ -58,7 +58,7 @@ export function Auth({ type }: { type: 'signup' | 'signin' }) {
                   });
                 }}
               />
-            )}
+            ) : null}
             <LabelledInput
               label="Username"
               placeholder="johndoe@gmail.com"
