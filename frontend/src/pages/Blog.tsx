@@ -1,3 +1,3 @@
 export function Blog() {
-  return <></>;
+  return <div>Blog with id</div>;
 }
