@@ -14,7 +14,7 @@ export function BlogCard({
   return (
     <div className="p-4 border-b border-slate-200 pb-4">
       <div className="flex">
-        <Avatar name={authorName} />
+        <Avatar name={authorName} size="small" />
 
         <div className="font-extralight pl-2 text-sm flex justify-center flex-col">
           {authorName}
@@ -40,10 +40,24 @@ export function Circle() {
   return <div className="h-1 w-1 rounded-full bg-slate-500"></div>;
 }
 
-export function Avatar({ name }: { name: string }) {
+export function Avatar({
+  name,
+  size,
+}: {
+  name: string;
+  size: 'small' | 'large';
+}) {
   return (
-    <div className="relative inline-flex items-center justify-center w-6 h-6 overflow-hidden bg-gray-600 rounded-full ">
-      <span className="font-xs text-gray-300">{name[0]}</span>
+    <div
+      className={`relative inline-flex items-center justify-center ${
+        size === 'small' ? 'w-6 h-6' : 'w-10 h-10'
+      } overflow-hidden bg-gray-600 rounded-full`}
+    >
+      <span
+        className={`${size === 'small' ? 'text-xs' : 'text-lg'}  text-gray-300`}
+      >
+        {name[0]}
+      </span>
     </div>
   );
 }
