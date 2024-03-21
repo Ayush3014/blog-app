@@ -21,7 +21,9 @@ export function Auth({ type }: { type: 'signup' | 'signin' }) {
       );
 
       const jwt = response.data;
-      localStorage.setItem('token', jwt);
+
+      localStorage.setItem('token', JSON.stringify(jwt));
+
       navigate('/blogs');
     } catch (error) {
       alert('Error while signing up');
