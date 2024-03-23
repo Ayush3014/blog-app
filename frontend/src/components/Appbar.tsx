@@ -1,7 +1,7 @@
-import { Avatar } from './BlogCard';
+import { Avatar } from './Avatar';
 import { Link } from 'react-router-dom';
 
-export function Appbar() {
+export function Appbar({ name }: { name: string }) {
   return (
     <div className="border-b flex justify-between px-10 py-4 ">
       <Link
@@ -20,7 +20,7 @@ export function Appbar() {
           </button>
         </Link>
 
-        <Avatar name="User" size="large" />
+        <Avatar name={name} size="large" />
       </div>
     </div>
   );
