@@ -21,7 +21,7 @@ export function Auth({ type }: { type: 'signup' | 'signin' }) {
       );
 
       const jwt = response.data;
-      console.log(jwt);
+      console.log('signin jwt', jwt);
       localStorage.setItem('token', JSON.stringify(jwt));
 
       navigate('/blogs');

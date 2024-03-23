@@ -17,6 +17,7 @@ export function useBlogs() {
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/api/v1/blog/bulk`).then((response) => {
+      console.log('index ts, bulk route', response.data.posts);
       setBlogs(response.data.posts);
       setLoading(false);
     });
@@ -41,7 +42,7 @@ export function useBlog({ id }: { id: string }) {
         },
       })
       .then((response) => {
-        console.log(response.data.blog);
+        console.log('blog with id index.ts', response.data.blog);
         setBlog(response.data.blog);
         setLoading(false);
       });

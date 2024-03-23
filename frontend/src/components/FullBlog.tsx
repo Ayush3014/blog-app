@@ -5,7 +5,7 @@ import { Avatar } from './Avatar';
 export function FullBlog({ blog }: { blog: BlogInterface }) {
   return (
     <div>
-      <Appbar name={blog.author.name} />
+      <Appbar name={blog.author.name || 'Anonymous'} />
       <div className="flex justify-center">
         <div className="grid grid-cols-12 px-10 w-full mx-10 pt-12 max-w-screen-xl">
           <div className="col-span-8">
