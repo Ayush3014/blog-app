@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { BACKEND_URL } from '../config';
 
-interface Blog {
+export interface BlogInterface {
   content: string;
   title: string;
   id: string;
@@ -13,7 +13,7 @@ interface Blog {
 
 export function useBlogs() {
   const [loading, setLoading] = useState(true);
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [blogs, setBlogs] = useState<BlogInterface[]>([]);
 
   useEffect(() => {
     axios.get(`${BACKEND_URL}/api/v1/blog/bulk`).then((response) => {
@@ -28,7 +28,7 @@ export function useBlogs() {
 // to get a specific blog with an id and caching it to avoid loading on opening the blog again
 export function useBlog({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
-  const [blog, setBlog] = useState<Blog[]>([]);
+  const [blog, setBlog] = useState<BlogInterface[]>([]);
 
   const tokenString = localStorage.getItem('token');
   const token = tokenString ? JSON.parse(tokenString) : null;

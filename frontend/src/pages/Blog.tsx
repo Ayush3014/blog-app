@@ -14,7 +14,7 @@ export function Blog() {
 
   return (
     <div>
-      <FullBlog />
+      <FullBlog blog={blog} />
     </div>
   );
 }
