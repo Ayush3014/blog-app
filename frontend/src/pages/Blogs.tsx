@@ -1,17 +1,28 @@
 import { Appbar } from '../components/Appbar';
 import { BlogCard } from '../components/BlogCard';
+import { BlogSkeleton } from '../components/BlogSkeleton';
 import { useBlogs } from '../hooks';
 import { jwtDecode } from 'jwt-decode';
 
 export function Blogs() {
   const { loading, blogs } = useBlogs();
-
-  if (loading) {
-    return <div>loading...</div>;
-  }
-
   const token = localStorage.getItem('token');
   const decodedJWT = jwtDecode(token);
+
+  if (loading) {
+    return (
+      <div>
+        <Appbar name={decodedJWT.name || 'Anonymous'} />
+        <div className="flex justify-center">
+          <div>
+            <BlogSkeleton />
+            <BlogSkeleton />
+            <BlogSkeleton />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
