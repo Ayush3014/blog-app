@@ -6,7 +6,7 @@ export function Appbar({ name }: { name: string }) {
     <div className="border-b flex justify-between px-10 py-4 ">
       <Link
         to={'/blogs'}
-        className="flex flex-col justify-center text-lg cursor-pointer"
+        className="flex flex-col justify-center text-2xl font-bold cursor-pointer"
       >
         Blog App
       </Link>

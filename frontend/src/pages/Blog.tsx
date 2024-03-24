@@ -36,6 +36,7 @@ export function Blog() {
     if (blog !== null) {
       return (
         <div>
+          <Appbar name={decodedJWT.name || 'Anonymous'} />
           <FullBlog blog={blog} />
         </div>
       );
