@@ -11,11 +11,7 @@ const app = new Hono<{
   };
 }>();
 
-const corsOptions = {
-  origin: 'https://blog-app-ashen-kappa.vercel.app/',
-};
-
-app.use('/*', cors(corsOptions));
+app.use('/*', cors());
 app.route('/api/v1/user', userRouter);
 app.route('/api/v1/blog', blogRouter);
 
