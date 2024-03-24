@@ -4,6 +4,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../config';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { MyToken } from './Blog';
 
 export function Publish() {
   const [title, setTitle] = useState('');
@@ -11,54 +12,56 @@ export function Publish() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem('token');
-  const decodedJWT = jwtDecode(token);
 
-  return (
-    <div>
-      <Appbar name={decodedJWT.name || 'Anonymous'} />
-      <div className="flex justify-center w-full pt-8">
-        <div className="max-w-screen-lg w-full">
-          <input
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }}
-            type="text"
-            className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-            placeholder="Title"
-            required
-          />
-          <TextEditor
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-          />
-          <button
-            onClick={async () => {
-              const tokenString = localStorage.getItem('token');
-              const token = tokenString ? JSON.parse(tokenString) : null;
-              const response = await axios.post(
-                `${BACKEND_URL}/api/v1/blog`,
-                {
-                  title,
-                  content: description,
-                },
-                {
-                  headers: {
-                    Authorization: 'Bearer ' + token.jwt,
+  if (token) {
+    const decodedJWT = jwtDecode<MyToken>(token);
+    return (
+      <div>
+        <Appbar name={decodedJWT.name || 'Anonymous'} />
+        <div className="flex justify-center w-full pt-8">
+          <div className="max-w-screen-lg w-full">
+            <input
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+              type="text"
+              className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-3xl focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+              placeholder="Title"
+              required
+            />
+            <TextEditor
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
+            />
+            <button
+              onClick={async () => {
+                const tokenString = localStorage.getItem('token');
+                const token = tokenString ? JSON.parse(tokenString) : null;
+                const response = await axios.post(
+                  `${BACKEND_URL}/api/v1/blog`,
+                  {
+                    title,
+                    content: description,
                   },
-                }
-              );
-              navigate(`/blog/${response.data.id}`);
-            }}
-            type="submit"
-            className=" inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-3xl focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
-          >
-            Publish post
-          </button>
+                  {
+                    headers: {
+                      Authorization: 'Bearer ' + token.jwt,
+                    },
+                  }
+                );
+                navigate(`/blog/${response.data.id}`);
+              }}
+              type="submit"
+              className=" inline-flex items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-blue-700 rounded-3xl focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
+            >
+              Publish post
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export function TextEditor({
