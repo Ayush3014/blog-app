@@ -26,10 +26,9 @@ export function useBlogs() {
   return { loading, blogs };
 }
 
-// to get a specific blog with an id and caching it to avoid loading on opening the blog again
 export function useBlog({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
-  const [blog, setBlog] = useState<BlogInterface[]>([]);
+  const [blog, setBlog] = useState<BlogInterface | null>(null);
 
   const tokenString = localStorage.getItem('token');
   const token = tokenString ? JSON.parse(tokenString) : null;

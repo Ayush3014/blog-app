@@ -1,10 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { useBlog } from '../hooks';
 import { FullBlog } from '../components/FullBlog';
-
 import { Appbar } from '../components/Appbar';
 import { jwtDecode } from 'jwt-decode';
 import { FullBlogSkeleton } from '../components/FullBlogSkeleton';
+
+export interface MyToken {
+  id: string;
+  name: string;
+}
 
 export function Blog() {
   const { id } = useParams();
@@ -13,24 +17,28 @@ export function Blog() {
   });
 
   const token = localStorage.getItem('token');
-  const decodedJWT = jwtDecode(token);
+  if (token) {
+    const decodedJWT = jwtDecode<MyToken>(token);
 
-  if (loading) {
-    return (
-      <div>
-        <Appbar name={decodedJWT.name || 'Anonymous'} />
-        <div className="flex justify-center ">
-          <div className="w-full">
-            <FullBlogSkeleton />
+    if (loading) {
+      return (
+        <div>
+          <Appbar name={decodedJWT.name || 'Anonymous'} />
+          <div className="flex justify-center ">
+            <div className="w-full">
+              <FullBlogSkeleton />
+            </div>
           </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  return (
-    <div>
-      <FullBlog blog={blog} />
-    </div>
-  );
+    if (blog !== null) {
+      return (
+        <div>
+          <FullBlog blog={blog} />
+        </div>
+      );
+    }
+  }
 }
